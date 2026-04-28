@@ -15,6 +15,9 @@ jobs:
           - target: bun-linux-x64
             os: ubuntu-latest
             artifact: blindspot-linux-x64
+          - target: bun-linux-arm64
+            os: ubuntu-latest
+            artifact: blindspot-linux-arm64
           - target: bun-darwin-x64
             os: macos-latest
             artifact: blindspot-darwin-x64
