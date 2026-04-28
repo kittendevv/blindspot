@@ -73,6 +73,13 @@ const files = await Array.fromAsync(
   glob.scan({ cwd: location, onlyFiles: true }),
 );
 
+if (files.length === 0) {
+  console.log(
+    "No files matched, check if your input path is correct, or if your file extensions are correct.",
+  );
+  process.exit(0);
+}
+
 // Check for dry run
 if (values["dry-run"]) {
   console.log("Would process:", files);
@@ -91,6 +98,7 @@ if (values["output-dir"] != undefined) {
 }
 
 function stripMeta(...args: string[]) {
+  console.log("Stripping:", files);
   const proc = Bun.spawnSync([
     "exiftool",
     ...args,
