@@ -19,6 +19,12 @@ const { positionals, values } = parseArgs({
 const [preset, location] = positionals;
 
 // Load all files in specified directory with specified extensions, with fallback
+if (location == undefined) {
+  throw new Error(
+    "No location provided, please provide a location. (/full/path, ./relative/path or just . for the current dir)",
+  );
+}
+
 const exts = values.ext?.split(",") ?? ["png", "jpg", "jpeg"];
 const pattern = values.recursive
   ? `**/*.{${exts.join(",")}}`
