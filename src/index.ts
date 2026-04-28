@@ -14,7 +14,7 @@ const { positionals, values } = parseArgs({
     ext: { type: "string", short: "e" }, // "png,webp" implemented
     "dry-run": { type: "boolean", short: "d" }, //implemented
     modify: { type: "boolean", short: "m" }, //implemented
-    "save-as-copy": { type: "boolean", short: "s" },
+    "save-as-copy": { type: "boolean", short: "s" }, // implemented
     "output-dir": { type: "string", short: "o" }, //implemented
     version: { type: "boolean", short: "v" }, //implemented
     help: { type: "boolean", short: "h" }, // implemented
@@ -55,6 +55,10 @@ Examples:
   blindspot web /home/user/photos -e png,jpg -o ./clean
 `);
   process.exit(0);
+}
+
+if (!preset || !["full", "gps", "web"].includes(preset)) {
+  throw new Error("Unknown preset! These are the presets: full, gps, web");
 }
 
 // Load all files in specified directory with specified extensions, with fallback
