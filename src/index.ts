@@ -1,15 +1,16 @@
 import { parseArgs } from "util";
 import { Glob } from "bun";
+import { resolve } from "path";
 
 // Define options
 const { positionals, values } = parseArgs({
   args: process.argv.slice(2),
   allowPositionals: true,
   options: {
-    recursive: { type: "boolean", short: "r" },
-    ext: { type: "string", short: "e" }, // "png,webp"
-    "dry-run": { type: "boolean", short: "d" },
-    modify: { type: "boolean", short: "m" },
+    recursive: { type: "boolean", short: "r" }, //implemented
+    ext: { type: "string", short: "e" }, // "png,webp" implemented
+    "dry-run": { type: "boolean", short: "d" }, //implemented
+    modify: { type: "boolean", short: "m" }, //implemented
     "save-as-copy": { type: "boolean", short: "s" },
     "output-dir": { type: "string", short: "o" },
   },
@@ -42,29 +43,35 @@ if (values["dry-run"]) {
   process.exit(0);
 }
 
+if (values["output-dir"] != undefined) {
+  const scanDir = resolve(location);
+  const outputDir = resolve(values["output-dir"]);
+  if (scanDir === outputDir) {
+    throw new Error(
+      "Your output dir cannot be the same directory as your input directory. If you wish to replace existing file use -m instead!",
+    );
+  }
+}
+
+function stripMeta(...args: string[]) {
+  const proc = Bun.spawnSync([
+    "exiftool",
+    ...args,
+    ...(values.modify ? ["-overwrite_original"] : []),
+    ...(values["output-dir"] ? ["-o", resolve(values["output-dir"])] : []),
+    ...files,
+  ]);
+}
+
 // Janky implementation of the actual strip
-if (preset == "full") {
-  // Remove all metadata
-  const proc = Bun.spawnSync([
-    "exiftool",
-    "-all=",
-    ...(values.modify ? ["-overwrite_original"] : []),
-    ...files,
-  ]);
+if (preset === "full") {
+  stripMeta("-all=");
   console.log("Successfully stripped all metadata.");
-} else if (preset == "gps") {
-  // Remove all GPS data
-  const proc = Bun.spawnSync([
-    "exiftool",
-    "-gps:all=",
-    ...(values.modify ? ["-overwrite_original"] : []),
-    ...files,
-  ]);
-  console.log("Successfully stripped all gps metadata");
-} else if (preset == "web") {
-  // Remove all GPS data + creator, owner, thumbnail, preview, artist
-  const proc = Bun.spawnSync([
-    "exiftool",
+} else if (preset === "gps") {
+  stripMeta("-gps:all=");
+  console.log("Successfully stripped all GPS metadata.");
+} else if (preset === "web") {
+  stripMeta(
     "-gps:all=",
     "-xmp:CreatorTool=",
     "-Artist=",
@@ -73,10 +80,8 @@ if (preset == "full") {
     "-SerialNumber=",
     "-ThumbnailImage=",
     "-PreviewImage=",
-    ...(values.modify ? ["-overwrite_original"] : []),
-    ...files,
-  ]);
-  console.log("Successfully stripped metadata for web use");
+  );
+  console.log("Successfully stripped metadata for web use.");
 } else {
   throw new Error("Unknown preset! These are the presets: full, gps, web");
 }
