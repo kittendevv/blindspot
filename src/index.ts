@@ -12,7 +12,7 @@ const { positionals, values } = parseArgs({
     "dry-run": { type: "boolean", short: "d" }, //implemented
     modify: { type: "boolean", short: "m" }, //implemented
     "save-as-copy": { type: "boolean", short: "s" },
-    "output-dir": { type: "string", short: "o" },
+    "output-dir": { type: "string", short: "o" }, //implemented
   },
 });
 
