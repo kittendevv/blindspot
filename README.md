@@ -1,4 +1,4 @@
-![blindpot](assets/banner.png)
+![blindpot](assets/Blindspot.png)
 
 Blindspot is a simple [exiftool](https://exiftool.org/) wrapper written in Typescript, it uses the bun runtime. The idea behind this project came because I was building my website and wanted to strip the location data of the images on there (to not dox myself) but exiftool is lets just say “advanced” my smooth brain couldn’t understand their documentation.
 
@@ -64,3 +64,5 @@ You can test run any command like this:
 ```bash
 bun run src/index.ts {command here}
 ```
+
+![blindpot](assets/banner.png)
