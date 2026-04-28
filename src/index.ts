@@ -1,6 +1,7 @@
 import { parseArgs } from "util";
 import { Glob } from "bun";
-import { resolve } from "path";
+import { copyFile } from "fs/promises";
+import { extname, basename, join, resolve } from "path";
 
 const VERSION = "0.1.0";
 
@@ -16,7 +17,7 @@ const { positionals, values } = parseArgs({
     "save-as-copy": { type: "boolean", short: "s" },
     "output-dir": { type: "string", short: "o" }, //implemented
     version: { type: "boolean", short: "v" }, //implemented
-    help: { type: "boolean", short: "h" },
+    help: { type: "boolean", short: "h" }, // implemented
   },
 });
 
@@ -97,14 +98,32 @@ if (values["output-dir"] != undefined) {
   }
 }
 
+// for save-as-copy
+async function saveAsCopy(files: string[], cwd: string) {
+  return Promise.all(
+    files.map((file) => {
+      const ext = extname(file); // Eg: .png
+      const name = basename(file, ext); // Eg: cat
+      const copy = join(cwd, `${name}.clean${ext}`); // Eg: cat.clean.png
+      return copyFile(join(cwd, file), copy).then(() => copy);
+    }),
+  );
+}
+
+let filesToProcess = files;
+
+if (values["save-as-copy"]) {
+  filesToProcess = await saveAsCopy(files, resolve(location));
+}
+
 function stripMeta(...args: string[]) {
-  console.log("Stripping:", files);
+  console.log("Stripping:", filesToProcess);
   const proc = Bun.spawnSync([
     "exiftool",
     ...args,
     ...(values.modify ? ["-overwrite_original"] : []),
     ...(values["output-dir"] ? ["-o", resolve(values["output-dir"])] : []),
-    ...files,
+    ...filesToProcess,
   ]);
 }
 
