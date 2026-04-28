@@ -2,6 +2,8 @@ import { parseArgs } from "util";
 import { Glob } from "bun";
 import { resolve } from "path";
 
+const VERSION = "0.1.0";
+
 // Define options
 const { positionals, values } = parseArgs({
   args: process.argv.slice(2),
@@ -13,11 +15,46 @@ const { positionals, values } = parseArgs({
     modify: { type: "boolean", short: "m" }, //implemented
     "save-as-copy": { type: "boolean", short: "s" },
     "output-dir": { type: "string", short: "o" }, //implemented
+    version: { type: "boolean", short: "v" }, //implemented
+    help: { type: "boolean", short: "h" },
   },
 });
 
 // take input: preset + location
 const [preset, location] = positionals;
+
+// print version and exit
+if (values["version"]) {
+  console.log("Current version of blindspot:", VERSION);
+  process.exit(0);
+}
+
+// print help and exit
+if (values.help) {
+  console.log(`
+Usage: blindspot <preset> <location> [options]
+
+Presets:
+  full    Strip all metadata
+  gps     Strip GPS data only
+  web     Strip GPS, creator, owner, thumbnail and preview data
+
+Options:
+  -r, --recursive         Scan subdirectories
+  -e, --ext <exts>        File extensions to process (default: png,jpg,jpeg)
+  -d, --dry-run           List files that would be processed without modifying them
+  -m, --modify            Overwrite original files (default: saves a copy)
+  -s, --save-as-copy      Save as a copy with .clean extension
+  -o, --output-dir <dir>  Output directory for processed files
+  -h, --help              Show this help message
+
+Examples:
+  blindspot full .
+  blindspot gps ./photos -r
+  blindspot web /home/user/photos -e png,jpg -o ./clean
+`);
+  process.exit(0);
+}
 
 // Load all files in specified directory with specified extensions, with fallback
 if (location == undefined) {
