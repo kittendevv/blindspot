@@ -3,7 +3,7 @@ import { Glob } from "bun";
 import { copyFile } from "fs/promises";
 import { extname, basename, join, resolve } from "path";
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
 // Define options
 const { positionals, values } = parseArgs({
@@ -74,7 +74,15 @@ if (location == undefined) {
   );
 }
 
-const exts = values.ext?.split(",") ?? ["png", "jpg", "jpeg"];
+const exts = values.ext?.split(",") ?? [
+  "png",
+  "jpg",
+  "jpeg",
+  "webp",
+  "tiff",
+  "heic",
+  "avif",
+];
 const pattern = values.recursive
   ? `**/*.{${exts.join(",")}}`
   : `*.{${exts.join(",")}}`;
@@ -86,7 +94,7 @@ const files = await Array.fromAsync(
 
 if (files.length === 0) {
   console.log(
-    "No files matched, check if your input path is correct, or if your file extensions are correct.",
+    "No files matched, check if your input path is correct, or if your file extensions are correct see help to match custom file extensions. (default checked extensions: png, jpg, jpeg, webp, tiff, heic, avif)",
   );
   process.exit(0);
 }
