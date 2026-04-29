@@ -21,7 +21,9 @@ If your distro is not here: I am not gonna look up the package name for every di
 
 For windows see [install instructions](https://exiftool.org/install.html)
 
-## Installing on Linux & MacOS
+---
+
+# Installing on Linux & MacOS
 
 To install blindspot on these platforms its as easy as running this install command.
 
@@ -42,10 +44,11 @@ cd blindspot
 bun build src/index.ts --compile --target={your-platform} --outfile dist/blindspot
 ```
 
-
-## Installing on Windows
+# Installing on Windows
 
 If your computers runs MicroSlop® Windows you can install the app by downloading the exe from [the latest release](https://github.com/kittendevv/blindspot/releases/latest/)
+
+---
 
 # Development
 

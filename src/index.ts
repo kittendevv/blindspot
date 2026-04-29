@@ -57,6 +57,12 @@ Examples:
   process.exit(0);
 }
 
+if (!Bun.which("exiftool")) {
+  throw new Error(
+    "exiftool is not installed. Please install it first: https://github.com/kittendevv/blindspot#installing--requirements",
+  );
+}
+
 if (!preset || !["full", "gps", "web"].includes(preset)) {
   throw new Error("Unknown preset! These are the presets: full, gps, web");
 }
