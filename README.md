@@ -50,6 +50,18 @@ If your computers runs MicroSlop® Windows you can install the app by downloadin
 
 ---
 
+# Usage
+
+Below are a few commands you might use.
+
+```bash
+# Clear all gps exif metadata from files in the current directory and overwrite files
+blindspot gps . -m
+
+# Clear all exif metadata from files in the current directory and output files into /clean
+blindspot full . -m -o ./clean
+```
+
 # Development
 
 If you feel like questioning you sanity by looking at my spaghetti code, these are the instructions to develop this app locally.

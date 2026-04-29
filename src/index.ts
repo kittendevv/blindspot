@@ -42,10 +42,10 @@ Presets:
 
 Options:
   -r, --recursive         Scan subdirectories
-  -e, --ext <exts>        File extensions to process (default: png,jpg,jpeg)
+  -e, --ext <exts>        File extensions to process (default: png, jpg, jpeg, webp, tiff, heic, avif
   -d, --dry-run           List files that would be processed without modifying them
-  -m, --modify            Overwrite original files (default: saves a copy)
-  -s, --save-as-copy      Save as a copy with .clean extension
+  -m, --modify            Overwrite original files
+  -s, --save-as-copy      Save as a copy with .clean extension (default)
   -o, --output-dir <dir>  Output directory for processed files
   -h, --help              Show this help message
 
@@ -57,6 +57,7 @@ Examples:
   process.exit(0);
 }
 
+// Check for some errors
 if (!Bun.which("exiftool")) {
   throw new Error(
     "exiftool is not installed. Please install it first: https://github.com/kittendevv/blindspot#installing--requirements",
@@ -67,13 +68,13 @@ if (!preset || !["full", "gps", "web"].includes(preset)) {
   throw new Error("Unknown preset! These are the presets: full, gps, web");
 }
 
-// Load all files in specified directory with specified extensions, with fallback
 if (location == undefined) {
   throw new Error(
     "No location provided, please provide a location. (/full/path, ./relative/path or just . for the current dir)",
   );
 }
 
+// Actual code
 const exts = values.ext?.split(",") ?? [
   "png",
   "jpg",
